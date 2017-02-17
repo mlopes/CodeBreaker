@@ -1,0 +1,8 @@
+bin/
+vendor/
+
+# spec and src folders are to be deleted 
+# at the end of every kata, so they're to
+# be ignored
+src/
+spec/

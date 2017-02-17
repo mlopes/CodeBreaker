@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+class Main
+{
+    private $codebreaker;
+
+    public function __construct(Codebreaker $codebreaker)
+    {
+        $this->codebreaker = $codebreaker;
+        $this->codebreaker->setSecret((string)rand(1000, 9999));
+    }
+
+    public function run()
+    {
+        $guessResult = $this->takeGuess();
+
+        if ($guessResult !== '++++') {
+            echo $guessResult . "\n";
+            return $this->run();
+        }
+
+        echo("Well done!!!\n");
+    }
+
+    private function takeGuess()
+    {
+        $guess = readline('Guess what 4 digit number I\'m thing of? ');
+        $guessResult = $this->codebreaker->takeGuess($guess);
+        return $guessResult;
+    }
+
+}
+
+
+$codeBreaker = new <your code breaker here>;
+
+$codebreaker = new Main($codeBreaker);
+$codebreaker->run();
