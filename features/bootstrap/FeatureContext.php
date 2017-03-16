@@ -8,8 +8,6 @@ use Behat\Behat\Context\Context;
  */
 class FeatureContext implements Context
 {
-    private $codeBreaker;
-
     private $result;
 
 
@@ -30,7 +28,6 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
-        $this->codeBreaker = new ColorCodeBreaker();
     }
 
     /**
@@ -38,7 +35,7 @@ class FeatureContext implements Context
      */
     public function theSecretIsSetTo($secret)
     {
-        $this->codeBreaker->setSecret($secret);
+        throw new PendingException();
     }
 
     /**
@@ -46,7 +43,7 @@ class FeatureContext implements Context
      */
     public function iTakeTheGuess($guess)
     {
-        $this->result = $this->codeBreaker->takeGuess($guess);
+        throw new PendingException();
     }
 
     /**
@@ -54,7 +51,8 @@ class FeatureContext implements Context
      */
     public function iShouldGetTheOutputInColor($output, $color)
     {
-        $this->assertColorAndEquals($color, $output, $this->result);
+        $result = '+';
+        $this->assertColorAndEquals($color, $output, $result);
     }
 
     /**
