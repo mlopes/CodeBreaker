@@ -6,6 +6,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class Main
 {
     private $codebreaker;
+    private $printMap = [
+        '+' => "\033[01;33m+\033[0m",
+        '-' => "\033[01;31m-\033[0m",
+    ];
 
     public function __construct(Codebreaker $codebreaker)
     {
@@ -18,10 +22,14 @@ class Main
         $guessResult = $this->takeGuess();
 
         if ($guessResult !== '++++') {
-            echo $guessResult . "\n";
+            foreach (str_split($guessResult) as $symbol) {
+                echo $this->printMap[$symbol];
+            }
+            echo "\n";
             return $this->run();
         }
 
+        echo "\033[01;32m" . $guessResult . "\n\033[0m";
         echo("Well done!!!\n");
     }
 
@@ -33,6 +41,7 @@ class Main
     }
 
 }
+
 
 
 $codeBreaker = new <your code breaker here>;
