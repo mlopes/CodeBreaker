@@ -33,6 +33,14 @@ class FeatureContext implements Context
     {
         $this->codeBreaker =  new <your code breaker here>;
         $this->printer = new <your printer class here>;
+
+        if (!$this->codeBreaker instanceOff 'CodeBreaker') {
+            throw new RuntimeException("Codebreaker must implement CodeBreaker interface");
+        }
+
+        if (!$this->codeBreaker instanceOff 'CodeBreakerPrinter') {
+            throw new RuntimeException("The Printer must implement CodeBreakerPrinter interface");
+        }
     }
 
     /**
