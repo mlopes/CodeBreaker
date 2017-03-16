@@ -12,12 +12,15 @@ class FeatureContext implements Context
 
 
     private $colors = [
-        'cyan' => 36,
-        'green' => 32,
-        'magenta' => 35,
         'red' => 31,
+        'green' => 32,
+        'yellow' => 33,
         'off' => 0
     ];
+
+    private $codeBreaker;
+    private $printer;
+    private $guessResult;
 
     /**
      * Initializes context.
@@ -28,6 +31,8 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
+        $this->codeBreaker =  new <your code breaker here>;
+        $this->printer = new <your printer class here>;
     }
 
     /**
@@ -35,7 +40,7 @@ class FeatureContext implements Context
      */
     public function theSecretIsSetTo($secret)
     {
-        throw new PendingException();
+        $this->codeBreaker->setSecret($secret);
     }
 
     /**
@@ -43,7 +48,7 @@ class FeatureContext implements Context
      */
     public function iTakeTheGuess($guess)
     {
-        throw new PendingException();
+        $this->guessResult = $this->codeBreaker->takeGuess($guess);
     }
 
     /**
@@ -51,8 +56,7 @@ class FeatureContext implements Context
      */
     public function iShouldGetTheOutputInColor($output, $color)
     {
-        $result = '+';
-        $this->assertColorAndEquals($color, $output, $result);
+        $this->assertColorAndEquals($color, $output, $this->guessResult);
     }
 
     /**
