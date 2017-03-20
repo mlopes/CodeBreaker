@@ -34,11 +34,11 @@ class FeatureContext implements Context
         $this->codeBreaker =  new <your code breaker here>;
         $this->printer = new <your printer class here>;
 
-        if (!$this->codeBreaker instanceOff 'CodeBreaker') {
+        if (!$this->codeBreaker instanceOf CodeBreaker) {
             throw new RuntimeException("Codebreaker must implement CodeBreaker interface");
         }
 
-        if (!$this->codeBreaker instanceOff 'CodeBreakerPrinter') {
+        if (!$this->printer instanceOf CodeBreakerPrinter) {
             throw new RuntimeException("The Printer must implement CodeBreakerPrinter interface");
         }
     }
@@ -60,24 +60,31 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then I should get the output :output in :color
+     * @Then I should get the output :expectedResult in :color
      */
-    public function iShouldGetTheOutputInColor($output, $color)
+    public function iShouldGetTheOutputInColor($expectedResult, $color)
     {
-        $this->assertColorAndEquals($color, $output, $this->guessResult);
+        $output = $this->printer->printResult($this->guessResult);
+        $expectedOutput = $this->possibleOutputsForColor($color);
+
+        if (!in_array($output, $expectedOutput)) {
+            throw new RuntimeException("Expected " . implode($expectedOutput, " or ") . " but got: $output");
+        }
     }
 
-    /**
-     * @param $output
-     */
-    private function assertColorAndEquals($color, $output, $result)
+    private function possibleOutputsForColor($color)
     {
-        if ($this->colors[$color] . $output !== $result) {
-            throw new RuntimeException(sprintf(
-                "Expected \e[%sm%s\e[%sm but got: \e[%sm%s\e[%sm",
-                $this->colors[$color], $output, $this->colors['red'],
-                $this->colors['off'], $result, $this->colors['red']
-            ));
+        $expectedOutput[] = sprintf("\033[01;%sm%s\033[%sm", $this->colors[$color], $this->guessResult, $this->colors['off']);
+
+        if(strlen($this->guessResult) > 1) {
+            $composedOutput = "";
+            foreach (str_split($this->guessResult) as $char) {
+                $composedOutput .= sprintf("\033[01;%sm%s\033[%sm", $this->colors[$color], $char, $this->colors['off']);
+            }
+
+            $expectedOutput[] = $composedOutput;
         }
+
+        return $expectedOutput;
     }
 }
