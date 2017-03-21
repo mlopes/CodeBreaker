@@ -6,14 +6,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class Main
 {
     private $codebreaker;
-    private $printer;
+    private $formatter;
 
-    public function __construct(Codebreaker $codebreaker, CodeBreakerPrinter $printer)
+    public function __construct(Codebreaker $codebreaker, Formatter $formatter)
     {
         $this->codebreaker = $codebreaker;
         $this->codebreaker->setSecret((string)rand(1000, 9999));
 
-        $this->printer = $printer;
+        $this->formatter = $formatter;
     }
 
     public function run()
@@ -21,11 +21,11 @@ class Main
         $guessResult = $this->takeGuess();
 
         if ($guessResult !== '++++') {
-            $this->printer->printResult($guessResult);
+            echo $this->formatter->format($guessResult);
             return $this->run();
         }
 
-        $this->printer->printResult($guessResult);
+        echo $this->formatter->format($guessResult);
         echo("Well done!!!\n");
     }
 
@@ -39,8 +39,8 @@ class Main
 }
 
 
-$codeBreaker = new <your code breaker here>;
-$printer = new <your printer class here>;
+$codeBreaker = new NumberCodeBreaker();
+$formatter = new ColourFormatter();
 
-$codebreaker = new Main($codeBreaker, $printer);
+$codebreaker = new Main($codeBreaker, $formatter);
 $codebreaker->run();

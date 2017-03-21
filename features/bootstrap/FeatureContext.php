@@ -19,7 +19,7 @@ class FeatureContext implements Context
     ];
 
     private $codeBreaker;
-    private $printer;
+    private $formatter;
     private $guessResult;
 
     /**
@@ -31,16 +31,8 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
-        $this->codeBreaker =  new <your code breaker here>;
-        $this->printer = new <your printer class here>;
-
-        if (!$this->codeBreaker instanceOf CodeBreaker) {
-            throw new RuntimeException("Codebreaker must implement CodeBreaker interface");
-        }
-
-        if (!$this->printer instanceOf CodeBreakerPrinter) {
-            throw new RuntimeException("The Printer must implement CodeBreakerPrinter interface");
-        }
+        $this->codeBreaker =  new NumberCodeBreaker();
+        $this->formatter = new ColourFormatter();
     }
 
     /**
@@ -64,19 +56,19 @@ class FeatureContext implements Context
      */
     public function iShouldGetTheOutputInColor($expectedResult, $color)
     {
-        $output = $this->printer->printResult($this->guessResult);
-        $expectedOutput = $this->possibleOutputsForColor($color);
+        $output = $this->formatter->format($this->guessResult);
+        $expectedOutput = $this->possibleOutputsForColor($color, $expectedResult);
 
         if (!in_array($output, $expectedOutput)) {
             throw new RuntimeException("Expected " . implode($expectedOutput, " or ") . " but got: $output");
         }
     }
 
-    private function possibleOutputsForColor($color)
+    private function possibleOutputsForColor($color, $expectedResult)
     {
-        $expectedOutput[] = sprintf("\033[01;%sm%s\033[%sm", $this->colors[$color], $this->guessResult, $this->colors['off']);
+        $expectedOutput[] = sprintf("\033[01;%sm%s\033[%sm", $this->colors[$color], $expectedResult, $this->colors['off']);
 
-        if(strlen($this->guessResult) > 1) {
+        if(strlen($expectedResult) > 1) {
             $composedOutput = "";
             foreach (str_split($this->guessResult) as $char) {
                 $composedOutput .= sprintf("\033[01;%sm%s\033[%sm", $this->colors[$color], $char, $this->colors['off']);
