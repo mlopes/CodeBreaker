@@ -5,12 +5,12 @@ interface Codebreaker
     /**
      * @param string $secret
      */
-    function setSecret($secret);
+    public function setSecret($secret);
 
     /**
      * @param string $guess
      *
-     * @return string $result
+     * @return string
      */
-    function takeGuess($guess);
+    public function takeGuess($guess);
 }

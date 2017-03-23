@@ -8,9 +8,6 @@ use Behat\Behat\Context\Context;
  */
 class FeatureContext implements Context
 {
-    private $result;
-
-
     private $colors = [
         'red' => 31,
         'green' => 32,

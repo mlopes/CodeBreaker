@@ -2,5 +2,10 @@
 
 interface Formatter
 {
-    function format($result);
+    /**
+     * @param string $result
+     *
+     * @return string
+     */
+    public function format($result);
 }
